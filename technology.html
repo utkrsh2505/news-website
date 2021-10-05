@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technology</title>
+    <style>
+        #nav {
+            border: 1px solid black;
+   display: flex;
+   justify-content: space-around;
+   background-color: cadetblue;
+          
+       
+            
+        }
+        #nav > div {
+           width: 500px;
+            
+            margin: auto;
+        }
+        #nav > div >ul   {
+            display: flex;
+            justify-content: right;
+    
+   
+        }
+        #ul> li{
+            list-style: none;
+        }
+        #ul > li >a {
+            text-decoration: none;
+            margin-left: 20px;
+            border: 1px solid black;
+            padding: 10px;
+            background-color: black;
+            color:white;
+
+        }
+        #input > button{
+            color: white;
+            background-color: black;
+            font-size: 20px;
+
+            margin: 10px;
+            
+        }
+        #search {
+          font-size: 30px;
+            margin: 10px;
+      
+
+        }
+        .newsContainer {
+           
+            width: 900px;
+            margin: 30px auto;
+            text-align: center;
+            background-color: rgb(179, 169, 157);
+            padding: 20px;
+            
+        }
+        .newsContainer > img{
+            width: 300px;
+            height: 300px;
+        }
+        .newsContainer > p {
+          margin: 20px;
+        
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <nav id="nav">
+           <div id="input">
+                <input type="text" id="search"/>
+                <button id="btn">Search</button>
+                </div>
+           <div>
+            <ul id="ul">
+                <li><a href="sports.html">Sports</a></li>
+                <li><a href="entertainment.html">Entertainment</a></li>
+                <li><a href="technology.html">Technology</a></li>
+            </ul>
+           </div>
+            
+        </nav>
+
+        <div id="display"></div>
+    </div>
+
+    <script>
+        function newsLoad(){
+            return fetch(`https://newsapi.org/v2/everything?q=technology&from=2021-09-05&sortBy=publishedAt&apiKey=e36b5c825d4e4a27b3b262445a398ffd`)
+            .then(function(resposnse){
+                return resposnse.json()
+            })
+            .then(function(response){
+               // console.log(response.articles[0]);
+                displayNews(response.articles);
+                
+            })
+            .catch(function(error){
+
+            })
+                
+        
+        }
+        function displayNews(arr){
+            var dis = document.getElementById("display");
+            dis.textContent= "";
+            for(let i=0; i<arr.length; i++){
+                var div = document.createElement("div");
+                div.className = "newsContainer";
+                var title = document.createElement("h2");
+                title.textContent = arr[i].title;
+                  var img = document.createElement("img");
+                  img.src = arr[i].urlToImage;
+
+                  var content = document.createElement("p");
+                  content.textContent = arr[i].description;
+
+                  div.appendChild(title);
+                  div.appendChild(img);
+                  div.appendChild(content);
+
+                  dis.appendChild(div)
+            }
+        }
+ function searchLoad(){
+     var text = document.getElementById("search").value;
+     fetch(`https://newsapi.org/v2/everything?q=${text}&from=2021-09-05&sortBy=popularity&apiKey=e36b5c825d4e4a27b3b262445a398ffd`)
+     .then(function(response){
+         return response.json()
+     })
+     .then(function(response){
+        console.log(response);
+        displayNews(response.articles)
+
+     })
+     .catch(function(error){
+
+     })
+ }
+        window.addEventListener("load",function(){
+            newsLoad();
+            var btn = document.getElementById("btn");
+            btn.addEventListener("click", searchLoad);
+        })
+    </script>
+</body>
+</html>
